@@ -181,30 +181,33 @@ function applyTiltEffect() {
 }
 
 // --- Core Logic ---
-async function init() {
-    await loadInventory();
-    loadCart();
-    renderCars();
-    setupEventListeners();
-    
-    // UI Enhancements
-    setTimeout(() => {
-        initMagneticCursor();
-        initAnimations();
-    }, 100);
+function init() {
+    loadInventory().then(() => {
+        loadCart();
+        renderCars();
+        setupEventListeners();
+        
+        // UI Enhancements
+        setTimeout(() => {
+            initMagneticCursor();
+            initAnimations();
+        }, 100);
+    });
 }
 
-async function loadInventory() {
-    try {
-        const res = await fetch('/api/inventory');
-        inventory = await res.json();
-        if (inventory.length === 0) {
+function loadInventory() {
+    return fetch('/api/inventory')
+        .then(res => res.json())
+        .then(data => {
+            inventory = data;
+            if (inventory.length === 0) {
+                inventory = defaultCars;
+            }
+        })
+        .catch(e => {
+            console.error("Failed to load inventory from API:", e);
             inventory = defaultCars;
-        }
-    } catch (e) {
-        console.error("Failed to load inventory from API:", e);
-        inventory = defaultCars;
-    }
+        });
 }
 
 function loadCart() {
