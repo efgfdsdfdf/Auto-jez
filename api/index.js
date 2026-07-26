@@ -29,6 +29,13 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.use(express.static(__dirname));
 
 // Database Endpoints
+app.get('/api/config', (req, res) => {
+    res.json({
+        supabaseUrl: process.env.SUPABASE_URL,
+        supabaseKey: process.env.SUPABASE_KEY
+    });
+});
+
 app.get('/api/inventory', async (req, res) => {
     try {
         const { data, error } = await supabase.from('inventory').select('*');

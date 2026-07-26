@@ -265,25 +265,42 @@ function setupEventListeners() {
             uploadBtn.disabled = true;
 
             try {
-                const response = await fetch('/api/upload', {
-                    method: 'POST',
-                    body: formData
-                });
+                // Fetch keys securely from our backend
+                const configRes = await fetch('/api/config');
+                const config = await configRes.json();
                 
-                const data = await response.json();
-                if (data.error) throw new Error(data.error);
+                if (!config.supabaseUrl) throw new Error("Could not connect to Vercel configuration.");
+
+                // Initialize direct connection to Supabase to bypass Vercel entirely
+                const supabaseClient = window.supabase.createClient(config.supabaseUrl, config.supabaseKey);
+                
+                const newUrls = [];
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    // Clean filename to prevent spaces/special chars from breaking URLs
+                    const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+                    const fileName = `${Date.now()}-${Math.round(Math.random() * 1E9)}-${cleanName}`;
+                    
+                    uploadStatus.innerText = `Uploading ${i+1} of ${files.length}...`;
+                    
+                    const { data, error } = await supabaseClient.storage.from('media').upload(fileName, file);
+                    if (error) throw new Error(error.message);
+                    
+                    const { data: urlData } = supabaseClient.storage.from('media').getPublicUrl(fileName);
+                    newUrls.push(urlData.publicUrl);
+                }
 
                 // Append new URLs to the textarea
                 const currentUrls = carImageInput.value.trim();
-                const newUrls = data.urls.join(', ');
-                carImageInput.value = currentUrls ? currentUrls + ', ' + newUrls : newUrls;
+                const joinedUrls = newUrls.join(', ');
+                carImageInput.value = currentUrls ? currentUrls + ', ' + joinedUrls : joinedUrls;
                 if (typeof renderMediaPreview === 'function') renderMediaPreview();
                 
                 uploadStatus.innerText = "Upload successful! Files attached.";
                 mediaInput.value = ''; // clear input
                 setTimeout(() => uploadStatus.innerText = "", 5000);
             } catch (err) {
-                alert("Upload Error: " + err.message + "\nMake sure the backend server (node server.js) is running.");
+                alert("Upload Error: " + err.message + "\\nMake sure your files aren't corrupted.");
                 uploadStatus.innerText = "Upload failed.";
             } finally {
                 uploadBtn.disabled = false;

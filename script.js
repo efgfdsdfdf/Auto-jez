@@ -95,23 +95,22 @@ const checkoutBtn = document.getElementById('checkout-btn');
 const cursor = document.querySelector('.custom-cursor');
 const cursorFollower = document.querySelector('.custom-cursor-follower');
 
-let xTo = gsap.quickTo(cursorFollower, "x", {duration: 0.1, ease: "power2.out"});
-let yTo = gsap.quickTo(cursorFollower, "y", {duration: 0.1, ease: "power2.out"});
+if (cursor && cursorFollower && window.matchMedia("(pointer: fine)").matches) {
+    let xTo = gsap.quickTo(cursorFollower, "x", {duration: 0.1, ease: "power2.out"});
+    let yTo = gsap.quickTo(cursorFollower, "y", {duration: 0.1, ease: "power2.out"});
 
-document.addEventListener('mousemove', (e) => {
-    // Immediate follow for the dot
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    
-    // Smooth follow for the outer ring using GSAP quickTo
-    xTo(e.clientX);
-    yTo(e.clientY);
-});
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+        xTo(e.clientX);
+        yTo(e.clientY);
+    });
+}
 
 function initMagneticCursor() {
+    if (!window.matchMedia("(pointer: fine)").matches) return;
     const magnetics = document.querySelectorAll('.magnetic, .magnetic-btn, button, a');
     magnetics.forEach(elem => {
-        // Remove old listeners to prevent duplicates if called multiple times
         elem.removeEventListener('mouseenter', onMouseEnterMagnetic);
         elem.removeEventListener('mouseleave', onMouseLeaveMagnetic);
         
@@ -121,13 +120,13 @@ function initMagneticCursor() {
 }
 
 function onMouseEnterMagnetic() {
-    cursor.classList.add('active');
-    cursorFollower.classList.add('active');
+    if (cursor) cursor.classList.add('active');
+    if (cursorFollower) cursorFollower.classList.add('active');
 }
 
 function onMouseLeaveMagnetic() {
-    cursor.classList.remove('active');
-    cursorFollower.classList.remove('active');
+    if (cursor) cursor.classList.remove('active');
+    if (cursorFollower) cursorFollower.classList.remove('active');
 }
 
 // --- GSAP Animations ---

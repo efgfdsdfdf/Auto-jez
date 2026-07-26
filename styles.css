@@ -66,6 +66,7 @@ body {
     height: 50px;
     background: rgba(212, 175, 55, 0.2);
     border: 1px solid var(--accent-primary);
+    transform: translate(-50%, -50%) scale(0);
 }
 .custom-cursor-follower {
     position: fixed;
