@@ -207,7 +207,7 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     transition: var(--transition);
 }
 .btn-icon:hover { color: var(--accent-primary); }
-.btn-block { width: 100%; }
+.btn-block { width: 100%; padding: 1rem !important; font-size: 1.1rem !important; border-radius: 30px !important; }
 
 /* Navbar */
 .navbar {
