@@ -479,18 +479,7 @@ function setupEventListeners() {
   const helpBtn = document.getElementById('floating-help-btn');
   const helpModal = document.getElementById('help-modal');
   const closeHelpBtn = document.getElementById('close-help');
-  const dismissHelpBtn = document.getElementById('dismiss-help-btn');
   const helpBtnContainer = document.getElementById('help-btn-container');
-  if (localStorage.getItem('autojez_hide_help') === 'true') {
-    if (helpBtnContainer) helpBtnContainer.style.display = 'none';
-  }
-  if (dismissHelpBtn && helpBtnContainer) {
-    dismissHelpBtn.addEventListener('click', e => {
-      e.stopPropagation();
-      helpBtnContainer.style.display = 'none';
-      localStorage.setItem('autojez_hide_help', 'true');
-    });
-  }
   if (helpBtn && helpModal) {
     helpBtn.addEventListener('click', () => {
       helpModal.classList.add('active');
