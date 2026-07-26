@@ -497,10 +497,19 @@ function setupEventListeners() {
       sidebarOverlay.classList.add('active');
     });
     window.closeHelp = function () {
-      helpModal.classList.remove('active');
-      sidebarOverlay.classList.remove('active');
+      if (helpModal) helpModal.classList.remove('active');
+      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+      localStorage.setItem('autojez_has_seen_help', 'true');
     };
     closeHelpBtn.addEventListener('click', closeHelp);
+
+    // Auto-open on first visit (after a short delay for animation)
+    if (localStorage.getItem('autojez_has_seen_help') !== 'true') {
+      setTimeout(() => {
+        helpModal.classList.add('active');
+        sidebarOverlay.classList.add('active');
+      }, 1500);
+    }
   }
 
   // Secret Admin Access (5 clicks on footer copyright)
