@@ -189,6 +189,52 @@
             </button>
         </div>
     </div>
+    <!-- Help Modal -->
+    <div id="help-modal" class="details-modal" style="max-width: 500px;">
+        <div class="modal-header">
+            <h2><i data-lucide="help-circle" style="display:inline-block; vertical-align:middle; margin-right:0.5rem; color:var(--accent-primary);"></i> How to use this site</h2>
+            <button class="btn-icon" id="close-help"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body" style="padding: 2rem;">
+            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <div style="background: rgba(212,175,55,0.1); padding: 0.8rem; border-radius: 50%; color: var(--accent-primary);"><i data-lucide="search"></i></div>
+                    <div>
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Live Search</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Instantly find specific cars or parts by typing the model or brand in the search bar above the inventory.</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <div style="background: rgba(212,175,55,0.1); padding: 0.8rem; border-radius: 50%; color: var(--accent-primary);"><i data-lucide="filter"></i></div>
+                    <div>
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Categories</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Click the category buttons (SUVs, Engines, etc.) to quickly filter what you see.</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <div style="background: rgba(212,175,55,0.1); padding: 0.8rem; border-radius: 50%; color: var(--accent-primary);"><i data-lucide="shopping-cart"></i></div>
+                    <div>
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Inquiry Cart</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Click 'Details' on any car and add it to your cart. You can send your entire list directly to us via WhatsApp!</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <div style="background: rgba(212,175,55,0.1); padding: 0.8rem; border-radius: 50%; color: var(--accent-primary);"><i data-lucide="message-circle"></i></div>
+                    <div>
+                        <h4 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Custom Orders</h4>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Don't see what you want? Use the contact details in the footer and we'll source it for you.</p>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-block magnetic-btn" style="margin-top: 2rem;" onclick="document.getElementById('close-help').click()">Got it, thanks!</button>
+        </div>
+    </div>
+
+    <!-- Floating Help Button -->
+    <button id="floating-help-btn" class="magnetic-btn" style="position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; border-radius: 50%; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); color: var(--accent-primary); z-index: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: pointer; transition: all 0.3s ease;">
+        <i data-lucide="help-circle" style="width: 28px; height: 28px;"></i>
+    </button>
+
     <div id="sidebar-overlay" class="overlay"></div>
 
     <!-- Car Details Modal -->
@@ -217,6 +263,6 @@
     </div>
 
     <!-- Custom JS (ES5 for old phones) -->
-    <script src="script.es5.js?v=7"></script>
+    <script src="script.es5.js?v=8"></script>
 </body>
 </html>

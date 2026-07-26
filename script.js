@@ -496,6 +496,7 @@ function setupEventListeners() {
     sidebarOverlay.addEventListener('click', () => {
         closeCart();
         closeDetails();
+        if (typeof closeHelp === 'function') closeHelp();
     });
     
     checkoutBtn.addEventListener('click', handleCheckout);
@@ -504,6 +505,25 @@ function setupEventListeners() {
     document.getElementById('close-details').addEventListener('click', closeDetails);
     document.getElementById('carousel-prev').addEventListener('click', () => goToCarouselIndex(currentCarouselIndex - 1));
     document.getElementById('carousel-next').addEventListener('click', () => goToCarouselIndex(currentCarouselIndex + 1));
+
+    // Help Modal
+    const helpBtn = document.getElementById('floating-help-btn');
+    const helpModal = document.getElementById('help-modal');
+    const closeHelpBtn = document.getElementById('close-help');
+
+    if (helpBtn && helpModal) {
+        helpBtn.addEventListener('click', () => {
+            helpModal.classList.add('active');
+            sidebarOverlay.classList.add('active');
+        });
+        
+        window.closeHelp = function() {
+            helpModal.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+        };
+        
+        closeHelpBtn.addEventListener('click', closeHelp);
+    }
 
     // Secret Admin Access (5 clicks on footer copyright)
     let secretClickCount = 0;
