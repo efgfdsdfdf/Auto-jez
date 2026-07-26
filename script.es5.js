@@ -249,16 +249,18 @@ function renderCars() {
     card.style.opacity = '0';
     card.style.transform = 'translateY(50px)';
     card.onclick = () => window.openDetails(car.id);
-    const conditionBadgeHtml = car.condition ? `<span class="car-badge condition-badge" style="background: rgba(212,175,55,0.2); border-color: var(--accent-primary); color: #fff;">${car.condition}</span>` : '';
+    const conditionBadgeHtml = car.condition ? `<span class="inline-badge condition-badge">${car.condition}</span>` : '';
     card.innerHTML = `
             <div class="car-card-inner">
                 <div class="car-img-wrapper">
-                    <span class="car-badge">${car.category}</span>
-                    ${conditionBadgeHtml}
                     <img src="${thumb}" alt="${car.make} ${car.model}" class="car-img" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Not+Found'">
                 </div>
                 <div class="car-details">
                     <h3 class="car-title">${car.make} <br><strong>${car.model}</strong></h3>
+                    <div class="inline-badges">
+                        <span class="inline-badge">${car.category}</span>
+                        ${conditionBadgeHtml}
+                    </div>
                     <div class="car-specs-list">
                         ${specsHtml}
                     </div>
