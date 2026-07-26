@@ -182,8 +182,8 @@ function applyTiltEffect() {
 }
 
 // --- Core Logic ---
-function init() {
-    loadInventory();
+async function init() {
+    await loadInventory();
     loadCart();
     renderCars();
     setupEventListeners();
@@ -195,17 +195,16 @@ function init() {
     }, 100);
 }
 
-function loadInventory() {
-    const stored = localStorage.getItem('autojez_inventory');
-    if (stored) {
-        inventory = JSON.parse(stored);
-        if(inventory.length === 0) {
+async function loadInventory() {
+    try {
+        const res = await fetch('/api/inventory');
+        inventory = await res.json();
+        if (inventory.length === 0) {
             inventory = defaultCars;
-            localStorage.setItem('autojez_inventory', JSON.stringify(inventory));
         }
-    } else {
+    } catch (e) {
+        console.error("Failed to load inventory from API:", e);
         inventory = defaultCars;
-        localStorage.setItem('autojez_inventory', JSON.stringify(inventory));
     }
 }
 
