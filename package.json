@@ -11,10 +11,21 @@
   "license": "ISC",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
+    "@babel/core": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
     "@supabase/supabase-js": "^2.110.8",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "multer": "^2.2.0"
-  }
+  },
+  "main": "admin.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/efgfdsdfdf/Auto-jez.git"
+  },
+  "bugs": {
+    "url": "https://github.com/efgfdsdfdf/Auto-jez/issues"
+  },
+  "homepage": "https://github.com/efgfdsdfdf/Auto-jez#readme"
 }
