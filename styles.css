@@ -743,6 +743,7 @@ footer {
     .sidebar { width: 100%; right: -100%; }
     .hero-title { font-size: 3rem; }
     .section-title { font-size: 2.5rem; }
+    .footer-content { flex-direction: column; gap: 2.5rem; }
     .filters { 
         flex-wrap: nowrap; 
         overflow-x: auto; 
