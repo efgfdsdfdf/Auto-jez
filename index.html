@@ -230,10 +230,15 @@
         </div>
     </div>
 
-    <!-- Floating Help Button -->
-    <button id="floating-help-btn" class="magnetic-btn" style="position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; border-radius: 50%; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); color: var(--accent-primary); z-index: 900; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: pointer; transition: all 0.3s ease;">
-        <i data-lucide="help-circle" style="width: 28px; height: 28px;"></i>
-    </button>
+    <!-- Floating Help Button Container -->
+    <div id="help-btn-container" style="position: fixed; bottom: 2rem; right: 2rem; z-index: 900; display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem;">
+        <button id="dismiss-help-btn" title="Dismiss Help" style="background: var(--glass-bg); border: 1px solid var(--border-color); color: var(--text-muted); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(10px); transition: color 0.3s;">
+            <i data-lucide="x" style="width: 14px; height: 14px;"></i>
+        </button>
+        <button id="floating-help-btn" class="magnetic-btn" style="width: 60px; height: 60px; border-radius: 50%; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); color: var(--accent-primary); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: pointer; transition: all 0.3s ease;">
+            <i data-lucide="help-circle" style="width: 28px; height: 28px;"></i>
+        </button>
+    </div>
 
     <div id="sidebar-overlay" class="overlay"></div>
 
@@ -263,6 +268,6 @@
     </div>
 
     <!-- Custom JS (ES5 for old phones) -->
-    <script src="script.es5.js?v=8"></script>
+    <script src="script.es5.js?v=9"></script>
 </body>
 </html>
