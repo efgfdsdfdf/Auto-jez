@@ -246,7 +246,7 @@ function renderCars() {
         card.style.transform = 'translateY(50px)';
         card.onclick = () => window.openDetails(car.id);
         
-        const conditionBadgeHtml = car.condition ? `<span class="car-badge condition-badge" style="top: 3rem; background: rgba(212,175,55,0.2); border-color: var(--accent-primary); color: #fff;">${car.condition}</span>` : '';
+        const conditionBadgeHtml = car.condition ? `<span class="car-badge condition-badge" style="background: rgba(212,175,55,0.2); border-color: var(--accent-primary); color: #fff;">${car.condition}</span>` : '';
 
         card.innerHTML = `
             <div class="car-card-inner">
