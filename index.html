@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Jez - Ultra Premium</title>
+    <meta name="description" content="Discover your dream car with Auto Jez. Browse our exclusive collection of the world's most prestigious vehicles.">
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="loading custom-cursor-enabled">
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-follower"></div>
+
+    <!-- Background Gradients -->
+    <div class="bg-gradient bg-gradient-1"></div>
+    <div class="bg-gradient bg-gradient-2"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <a href="#" class="logo magnetic">
+                <i data-lucide="car"></i>
+                AUTO JEZ
+            </a>
+            <div class="nav-links">
+                <a href="#home" class="magnetic">Home</a>
+                <a href="#inventory" class="magnetic">Inventory</a>
+                <a href="#about" class="magnetic">About</a>
+                <a href="#contact" class="magnetic">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="tel:08032654858" class="contact-link magnetic">
+                    <i data-lucide="phone"></i> +234 803 265 4858
+                </a>
+                <button id="cart-btn" class="btn-icon magnetic">
+                    <i data-lucide="shopping-cart"></i>
+                    <span id="cart-count" class="badge">0</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero gs-reveal">
+        <div class="hero-content">
+            <span class="badge-premium gs-up">⭐ Toyota Specialists</span>
+            <h1 class="hero-title gs-up">Reliability<br><span class="text-gradient">Guaranteed.</span></h1>
+            <p class="hero-subtitle gs-up">Your premium destination for authentic Toyota vehicles and genuine spare parts. Quality you can trust.</p>
+            
+            <div class="hero-actions gs-up">
+                <a href="#inventory" class="btn btn-primary magnetic-btn">
+                    Explore Inventory
+                </a>
+                <a href="#contact" class="btn btn-secondary magnetic-btn">
+                    Contact Specialist
+                </a>
+            </div>
+        </div>
+        <div class="hero-visual gs-fade">
+            <div class="hero-car-image">
+                <!-- Hero Image (Place your own image as hero.jpg in the images folder) -->
+                <img src="./images/hero.jpg" alt="Toyota Vehicle" class="parallax-img" onerror="this.src='https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=2000&auto=format&fit=crop'">
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item magnetic">
+                    <h3>100%</h3>
+                    <p>Genuine Parts</p>
+                </div>
+                <div class="stat-item magnetic">
+                    <h3>Top</h3>
+                    <p>Condition Cars</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Inventory Section -->
+    <section id="inventory" class="inventory">
+        <div class="section-header gs-reveal gs-up">
+            <div>
+                <h2 class="section-title">The Inventory</h2>
+                <p class="section-desc">Premium Toyota Vehicles & Genuine Parts.</p>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active magnetic" data-filter="all">All</button>
+                <button class="filter-btn magnetic" data-filter="Cars">All Cars</button>
+                <button class="filter-btn magnetic" data-filter="Spare Parts">Spare Parts</button>
+                <button class="filter-btn magnetic" data-filter="Sedans">Sedans</button>
+                <button class="filter-btn magnetic" data-filter="SUVs">SUVs</button>
+                <button class="filter-btn magnetic" data-filter="Pickups">Pickups</button>
+            </div>
+        </div>
+
+        <div id="car-grid" class="car-grid">
+            <!-- Cars will be injected here via JavaScript -->
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about gs-reveal">
+        <div class="about-content gs-up">
+            <span class="badge-premium">Who We Are</span>
+            <h2 class="section-title">Masters of <span class="text-gradient">Toyota</span></h2>
+            <p class="about-desc">Auto Jez is the premier destination for high-quality, pre-owned and brand new Toyota vehicles, as well as thoroughly inspected, genuine spare parts and engine blocks.</p>
+            <p class="about-desc">With years of expertise, we guarantee that every vehicle and part that leaves our vault meets the highest standards of reliability and excellence.</p>
+            <a href="#inventory" class="btn btn-secondary magnetic-btn">View Collection</a>
+        </div>
+        <div class="about-visual gs-fade">
+            <!-- About Image (Place your own image as about.jpg in the images folder) -->
+            <img src="./images/about.jpg" alt="Engine and Parts" onerror="this.src='https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?q=80&w=1000&auto=format&fit=crop'">
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact gs-reveal" style="padding: 8rem 5%; background: var(--bg-card); border-top: 1px solid var(--border-color); text-align: center;">
+        <div class="gs-up">
+            <span class="badge-premium" style="margin-bottom: 1rem;">Get in Touch</span>
+            <h2 class="section-title" style="margin-bottom: 1rem;">Let's Talk <span class="text-gradient">Business</span></h2>
+            <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 600px; margin: 0 auto 3rem;">Ready to acquire your next vehicle or need a specific engine part? Reach out to our specialist directly.</p>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <div class="glass" style="padding: 2rem; border-radius: 16px; width: 300px;">
+                    <i data-lucide="phone" style="width: 40px; height: 40px; color: var(--accent-primary); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Call Us</h3>
+                    <p style="color: var(--text-muted); font-size: 1.1rem;">+234 803 265 4858</p>
+                </div>
+                <div class="glass" style="padding: 2rem; border-radius: 16px; width: 300px;">
+                    <i data-lucide="message-circle" style="width: 40px; height: 40px; color: var(--accent-primary); margin-bottom: 1rem;"></i>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">WhatsApp</h3>
+                    <p style="color: var(--text-muted); font-size: 1.1rem;">+234 803 265 4858</p>
+                    <a href="https://wa.me/2348032654858" target="_blank" class="btn btn-primary magnetic-btn" style="margin-top: 1rem; padding: 0.5rem 1rem;">Chat Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass gs-reveal">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <i data-lucide="car"></i>
+                    AUTO JEZ
+                </a>
+                <p>Your premier destination for luxury and performance vehicles.</p>
+            </div>
+            <div class="footer-links">
+                <!-- Admin access is now deeply hidden -->
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p id="admin-secret-trigger" style="user-select: none;">&copy; 2026 Auto Jez. The ultimate automotive experience.</p>
+        </div>
+    </footer>
+
+    <!-- Shopping Cart Slide-out -->
+    <div id="cart-sidebar" class="sidebar glass">
+        <div class="sidebar-header">
+            <h2>Your Garage</h2>
+            <button id="close-cart" class="btn-icon magnetic">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <div class="empty-cart">Your garage is empty.</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total Value</span>
+                <span id="cart-total-price" class="text-gradient">₦0</span>
+            </div>
+            <button id="checkout-btn" class="btn btn-primary btn-block magnetic-btn">
+                Acquire via WhatsApp
+            </button>
+        </div>
+    </div>
+    <div id="sidebar-overlay" class="overlay"></div>
+
+    <!-- Car Details Modal -->
+    <div id="details-modal" class="details-modal">
+        <div class="modal-header">
+            <h2 id="details-title">Vehicle Details</h2>
+            <button id="close-details" class="btn-icon magnetic"><i data-lucide="x"></i></button>
+        </div>
+        <div class="modal-body">
+            <div id="details-carousel" class="carousel-container">
+                <!-- Media injected here -->
+                <button id="carousel-prev" class="carousel-btn carousel-prev"><i data-lucide="chevron-left"></i></button>
+                <button id="carousel-next" class="carousel-btn carousel-next"><i data-lucide="chevron-right"></i></button>
+                <div id="carousel-dots" class="carousel-dots"></div>
+            </div>
+            <div class="modal-details-content">
+                <div id="details-badges" style="display: flex; gap: 1rem; margin-bottom: 1rem;"></div>
+                <div id="details-specs" class="car-specs-list"></div>
+                <div id="details-desc" class="modal-desc"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <span id="details-price" class="car-price"></span>
+            <button id="details-acquire-btn" class="btn btn-primary magnetic-btn">Acquire Now</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

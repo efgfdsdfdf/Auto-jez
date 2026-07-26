@@ -1,0 +1,337 @@
+// admin.js
+
+// Initialize Lucide Icons
+lucide.createIcons();
+
+const ADMIN_PASSCODE = "1980";
+
+// State
+let inventory = [];
+let editingId = null;
+
+// DOM Elements
+const loginScreen = document.getElementById('login-screen');
+const adminDashboard = document.getElementById('admin-dashboard');
+const passcodeInput = document.getElementById('passcode-input');
+const loginBtn = document.getElementById('login-btn');
+const loginError = document.getElementById('login-error');
+const logoutBtn = document.getElementById('logout-btn');
+
+const carList = document.getElementById('admin-car-list');
+const addCarBtn = document.getElementById('add-car-btn');
+
+// Modal Elements
+const carModal = document.getElementById('car-modal');
+const modalOverlay = document.getElementById('modal-overlay');
+const closeModal = document.getElementById('close-modal');
+const cancelModal = document.getElementById('cancel-modal');
+const carForm = document.getElementById('car-form');
+const modalTitle = document.getElementById('modal-title');
+
+// Inputs
+const carIdInput = document.getElementById('car-id');
+const carMakeInput = document.getElementById('car-make');
+const carModelInput = document.getElementById('car-model');
+const carCategoryInput = document.getElementById('car-category');
+const carConditionInput = document.getElementById('car-condition');
+const carPriceInput = document.getElementById('car-price');
+const carImageInput = document.getElementById('car-image');
+const carSpecsInput = document.getElementById('car-specs');
+
+
+// Initialization
+function init() {
+    showLogin(); // Always require passcode
+    setupEventListeners();
+}
+
+function showLogin() {
+    loginScreen.classList.remove('hidden');
+    adminDashboard.classList.add('hidden');
+}
+
+function showDashboard() {
+    loginScreen.classList.add('hidden');
+    adminDashboard.classList.remove('hidden');
+    loadInventory();
+}
+
+function handleLogin() {
+    const pass = passcodeInput.value;
+    if (pass === ADMIN_PASSCODE) {
+        // Clear passcode input for security
+        passcodeInput.value = '';
+        showDashboard();
+    } else {
+        loginError.innerText = "Incorrect passcode.";
+    }
+}
+
+function handleLogout() {
+    showLogin();
+}
+
+// Data Management
+async function loadInventory() {
+    try {
+        const res = await fetch('/api/inventory');
+        inventory = await res.json();
+    } catch (e) {
+        console.error("Failed to load DB:", e);
+        inventory = [];
+    }
+    renderAdminTable();
+}
+
+async function saveInventory() {
+    try {
+        await fetch('/api/inventory', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(inventory)
+        });
+    } catch (e) {
+        console.error("Failed to save DB:", e);
+        alert("Error saving to database!");
+    }
+}
+
+function renderAdminTable() {
+    carList.innerHTML = '';
+    
+    if (inventory.length === 0) {
+        carList.innerHTML = '<tr><td colspan="5" class="text-center text-gray">No cars in inventory. Add one to get started.</td></tr>';
+        return;
+    }
+
+    inventory.forEach(car => {
+        const conditionText = car.condition ? `<br><small class="text-gray">${car.condition}</small>` : '';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><img src="${car.media ? car.media[0] : car.image}" alt="${car.make}" onerror="this.src='https://via.placeholder.com/60x40?text=Error'"></td>
+            <td><strong>${car.make}</strong> ${car.model}${conditionText}</td>
+            <td>${car.category}</td>
+            <td>₦${car.price}</td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn btn-secondary btn-small" onclick="openEditModal('${car.id}')"><i data-lucide="edit"></i></button>
+                    <button class="btn btn-primary btn-small" style="background-color: var(--error);" onclick="deleteCar('${car.id}')"><i data-lucide="trash"></i></button>
+                </div>
+            </td>
+        `;
+        carList.appendChild(tr);
+    });
+    
+    lucide.createIcons();
+}
+
+// Modal Logic
+function openAddModal() {
+    editingId = null;
+    document.getElementById('modal-title').innerText = "Add New Car";
+    carForm.reset();
+    carImageInput.value = '';
+    if (typeof renderMediaPreview === 'function') renderMediaPreview();
+    carModal.classList.remove('hidden');
+    modalOverlay.classList.remove('hidden');
+}
+
+function renderMediaPreview() {
+    const previewContainer = document.getElementById('media-preview-container');
+    if (!previewContainer) return;
+    previewContainer.innerHTML = '';
+    const urls = carImageInput.value.split(',').map(s => s.trim()).filter(s => s);
+    urls.forEach((url) => {
+        const thumb = document.createElement('div');
+        thumb.style = "width: 80px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); background: #000;";
+        if (url.toLowerCase().endsWith('.mp4')) {
+            thumb.innerHTML = `<video src="${url}" style="width: 100%; height: 100%; object-fit: cover;"></video>`;
+        } else {
+            thumb.innerHTML = `<img src="${url}" style="width: 100%; height: 100%; object-fit: cover;">`;
+        }
+        previewContainer.appendChild(thumb);
+    });
+}
+
+window.openEditModal = function(id) {
+    const car = inventory.find(c => c.id === id);
+    if (!car) return;
+    
+    editingId = id;
+    modalTitle.innerText = "Edit Car";
+    
+    carIdInput.value = car.id;
+    carMakeInput.value = car.make;
+    carModelInput.value = car.model;
+    carCategoryInput.value = car.category;
+    if(carConditionInput) carConditionInput.value = car.condition || "Brand New";
+    carPriceInput.value = car.price;
+    carImageInput.value = car.media ? car.media.join(', ') : car.image;
+    carSpecsInput.value = car.specs ? car.specs.join(', ') : '';
+    
+    if (typeof renderMediaPreview === 'function') renderMediaPreview();
+    
+    carModal.classList.remove('hidden');
+    modalOverlay.classList.remove('hidden');
+}
+
+function closeCarModal() {
+    carModal.classList.add('hidden');
+    modalOverlay.classList.add('hidden');
+}
+
+async function handleFormSubmit(e) {
+    e.preventDefault();
+    
+    const specsArray = carSpecsInput.value.split(',').map(s => s.trim()).filter(s => s);
+    const mediaArray = carImageInput.value.split(',').map(s => s.trim()).filter(s => s);
+    
+    const carData = {
+        id: editingId || Date.now().toString(),
+        make: carMakeInput.value,
+        model: carModelInput.value,
+        category: carCategoryInput.value,
+        condition: carConditionInput ? carConditionInput.value : "Brand New",
+        price: carPriceInput.value,
+        media: mediaArray,
+        image: mediaArray[0] || "",
+        specs: specsArray
+    };
+    
+    if (editingId) {
+        const index = inventory.findIndex(c => c.id === editingId);
+        if (index > -1) {
+            inventory[index] = carData;
+        }
+    } else {
+        inventory.push(carData);
+    }
+    
+    await saveInventory();
+    renderAdminTable();
+    closeCarModal();
+}
+
+window.deleteCar = async function(id) {
+    if (confirm("Are you sure you want to delete this car?")) {
+        inventory = inventory.filter(c => c.id !== id);
+        await saveInventory();
+        renderAdminTable();
+        
+        // Also remove from cart if it exists there
+        const cartStr = localStorage.getItem('autojez_cart');
+        if(cartStr) {
+            let cart = JSON.parse(cartStr);
+            cart = cart.filter(c => c.id !== id);
+            localStorage.setItem('autojez_cart', JSON.stringify(cart));
+        }
+    }
+}
+
+// Event Listeners
+function setupEventListeners() {
+    loginBtn.addEventListener('click', handleLogin);
+    passcodeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleLogin();
+    });
+    logoutBtn.addEventListener('click', handleLogout);
+    
+    addCarBtn.addEventListener('click', openAddModal);
+    closeModal.addEventListener('click', closeCarModal);
+    cancelModal.addEventListener('click', closeCarModal);
+    modalOverlay.addEventListener('click', closeCarModal);
+    
+    carForm.addEventListener('submit', handleFormSubmit);
+
+    // Media Upload Button
+    const uploadBtn = document.getElementById('upload-media-btn');
+    const mediaInput = document.getElementById('car-media-upload');
+    const uploadStatus = document.getElementById('upload-status');
+    
+    if (uploadBtn) {
+        uploadBtn.addEventListener('click', async () => {
+            const files = mediaInput.files;
+            if (files.length === 0) {
+                alert("Please select files first.");
+                return;
+            }
+
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('media', files[i]);
+            }
+
+            uploadStatus.innerText = "Uploading...";
+            uploadBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+
+                // Append new URLs to the textarea
+                const currentUrls = carImageInput.value.trim();
+                const newUrls = data.urls.join(', ');
+                carImageInput.value = currentUrls ? currentUrls + ', ' + newUrls : newUrls;
+                if (typeof renderMediaPreview === 'function') renderMediaPreview();
+                
+                uploadStatus.innerText = "Upload successful! Files attached.";
+                mediaInput.value = ''; // clear input
+                setTimeout(() => uploadStatus.innerText = "", 5000);
+            } catch (err) {
+                alert("Upload Error: " + err.message + "\nMake sure the backend server (node server.js) is running.");
+                uploadStatus.innerText = "Upload failed.";
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        });
+    }
+
+    const clearBtn = document.getElementById('clear-media-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            carImageInput.value = '';
+            if (typeof renderMediaPreview === 'function') renderMediaPreview();
+        });
+    }
+
+    // AI Enhance Button
+    const aiEnhanceBtn = document.getElementById('ai-enhance-btn');
+    if (aiEnhanceBtn) {
+        aiEnhanceBtn.addEventListener('click', async () => {
+            const draft = carSpecsInput.value.trim();
+            if (!draft) {
+                alert("Please write some rough specs or details first!");
+                return;
+            }
+            
+            aiEnhanceBtn.innerText = "⏳ Enhancing...";
+            aiEnhanceBtn.disabled = true;
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/enhance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ draft })
+                });
+                
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+                
+                carSpecsInput.value = data.result;
+            } catch (err) {
+                alert("AI Error: " + err.message + "\nMake sure the backend server (node server.js) is running.");
+            } finally {
+                aiEnhanceBtn.innerText = "✨ Enhance with AI";
+                aiEnhanceBtn.disabled = false;
+            }
+        });
+    }
+}
+
+// Run
+init();

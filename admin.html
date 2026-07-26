@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Jez - Admin Portal</title>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-body">
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <a href="index.html" class="logo justify-center mb-4">
+                <i data-lucide="car"></i>
+                AUTO JEZ ADMIN
+            </a>
+            <p class="text-gray mb-6 text-center">Enter passcode to access inventory</p>
+            <div class="form-group">
+                <input type="password" id="passcode-input" placeholder="Enter Admin Passcode (hint: 1234)">
+            </div>
+            <button id="login-btn" class="btn btn-primary btn-block">Login</button>
+            <p id="login-error" class="error-msg"></p>
+            <a href="index.html" class="back-link mt-4 text-center block"><i data-lucide="arrow-left"></i> Back to Site</a>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="admin-dashboard hidden">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-brand">
+                <i data-lucide="shield-check"></i> Admin Portal
+            </div>
+            <nav class="admin-nav">
+                <a href="#" class="active"><i data-lucide="layout-dashboard"></i> Inventory</a>
+                <a href="index.html"><i data-lucide="external-link"></i> View Site</a>
+                <a href="#" id="logout-btn"><i data-lucide="log-out"></i> Logout</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h2>Manage Inventory</h2>
+                <button id="add-car-btn" class="btn btn-primary">
+                    <i data-lucide="plus"></i> Add New Car
+                </button>
+            </header>
+
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Make & Model</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-car-list">
+                        <!-- Car rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Car Modal -->
+    <div id="car-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add New Car</h2>
+                <button id="close-modal" class="btn-icon"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="car-form">
+                    <input type="hidden" id="car-id">
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Make (Brand)</label>
+                            <input type="text" id="car-make" required placeholder="e.g. Mercedes-Benz">
+                        </div>
+                        <div class="form-group">
+                            <label>Model</label>
+                            <input type="text" id="car-model" required placeholder="e.g. AMG GT">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="car-category" required>
+                                <option value="Sedans">Sedans</option>
+                                <option value="SUVs">SUVs</option>
+                                <option value="Pickups">Pickups</option>
+                                <option value="Spare Parts">Spare Parts</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Condition</label>
+                            <select id="car-condition" required>
+                                <option value="Brand New">Brand New</option>
+                                <option value="Foreign Used">Foreign Used (Tokunbo)</option>
+                                <option value="Locally Used">Locally Used</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₦)</label>
+                            <input type="text" id="car-price" required placeholder="e.g. 150,000,000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Upload Local Media (Images / MP4 Videos)</label>
+                        <input type="file" id="car-media-upload" multiple accept="image/*,video/mp4" style="width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-family: inherit; font-size: 1rem; margin-bottom: 0.5rem;">
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button type="button" id="upload-media-btn" class="btn btn-secondary btn-small">Upload Selected Files</button>
+                            <button type="button" id="clear-media-btn" class="btn btn-secondary btn-small" style="background: rgba(255, 77, 77, 0.2); border-color: #ff4d4d; color: #ff4d4d;">Clear Existing Media</button>
+                        </div>
+                        <div id="upload-status" style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--accent-primary);"></div>
+                        <input type="hidden" id="car-image">
+                        <div id="media-preview-container" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <label style="margin-bottom: 0;">Description / Specs (Comma separated)</label>
+                            <button type="button" id="ai-enhance-btn" class="btn btn-secondary btn-small" style="padding: 0.3rem 0.8rem;">
+                                ✨ Enhance with AI
+                            </button>
+                        </div>
+                        <textarea id="car-specs" required placeholder="e.g. V6 Engine, Leather Seats, 4WD" rows="3" style="width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-family: inherit; font-size: 1rem; resize: vertical;"></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="cancel-modal" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Car</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="modal-overlay" class="overlay hidden"></div>
+
+    <!-- Scripts -->
+    <script src="admin.js"></script>
+</body>
+</html>
