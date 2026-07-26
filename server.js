@@ -35,7 +35,7 @@ app.use('/uploads', express.static(path.join(__dirname, '.uploads')));
 app.use(express.static(__dirname));
 
 // Database Logic
-const dbPath = path.join(__dirname, 'database.json');
+const dbPath = path.join(__dirname, '.uploads', 'database.json');
 
 function getInventory() {
     if (fs.existsSync(dbPath)) {
