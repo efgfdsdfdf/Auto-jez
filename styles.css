@@ -747,16 +747,16 @@ footer {
     .admin-dashboard { flex-direction: column; }
     .admin-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); }
     
-    /* Mobile side-by-side grid */
-    .car-grid { gap: 1rem; }
-    .car-card { grid-column: span 6 !important; min-width: 0; }
-    .car-card-inner { padding: 0.5rem; }
-    .car-title { font-size: 0.9rem; margin-bottom: 0.5rem; word-wrap: break-word; hyphens: auto; }
-    .car-title strong { font-size: 1rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .car-price { font-size: 0.9rem; }
-    .car-price-row { padding-top: 1rem; flex-direction: column; gap: 0.5rem; align-items: flex-start; }
-    .car-img-wrapper { height: 100px; margin-bottom: 0.5rem; }
-    .car-specs-list { display: none; } /* Hide specs on tiny grid, user will click Details */
+    /* Mobile stacked grid */
+    .car-grid { gap: 1.5rem; }
+    .car-card { grid-column: span 12 !important; min-width: 0; }
+    .car-card-inner { padding: 1rem; }
+    .car-title { font-size: 1.2rem; margin-bottom: 0.5rem; word-wrap: break-word; hyphens: auto; }
+    .car-title strong { font-size: 1.3rem; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .car-price { font-size: 1.1rem; }
+    .car-price-row { padding-top: 1rem; flex-direction: row; gap: 0.5rem; align-items: center; justify-content: space-between; }
+    .car-img-wrapper { height: 180px; margin-bottom: 1rem; }
+    .car-specs-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; font-size: 0.8rem; }
     .btn { padding: 0.4rem 0.6rem; font-size: 0.7rem; width: 100%; text-align: center; }
     
     /* About Section Mobile */
