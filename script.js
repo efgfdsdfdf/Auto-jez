@@ -78,6 +78,7 @@ const WHATSAPP_NUMBER = "2348032654858";
 let inventory = [];
 let cart = [];
 let currentFilter = 'all';
+let searchQuery = '';
 
 // DOM Elements
 const carGrid = document.getElementById('car-grid');
@@ -231,8 +232,24 @@ function renderCars() {
         filteredCars = inventory.filter(car => car.category === currentFilter);
     }
 
+    if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        filteredCars = filteredCars.filter(car => 
+            (car.make && car.make.toLowerCase().includes(query)) || 
+            (car.model && car.model.toLowerCase().includes(query)) ||
+            (car.category && car.category.toLowerCase().includes(query)) ||
+            (car.condition && car.condition.toLowerCase().includes(query))
+        );
+    }
+
     if (filteredCars.length === 0) {
-        carGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No masterpieces found in this category.</p>';
+        carGrid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; background: var(--glass-bg); border-radius: 16px; border: 1px solid var(--border-color);">
+                <h3 style="font-size: 1.8rem; margin-bottom: 1rem; font-weight: 300;">Not seeing what you're looking for?</h3>
+                <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1.1rem;">We can source any premium vehicle or part specifically for you.</p>
+                <a href="#footer" class="btn btn-primary">Contact Business Owner</a>
+            </div>
+        `;
         return;
     }
 
@@ -457,6 +474,13 @@ function goToCarouselIndex(index) {
 }
 
 function setupEventListeners() {
+    const searchInput = document.getElementById('inventory-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderCars();
+        });
+    }
     filterBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             filterBtns.forEach(b => b.classList.remove('active'));

@@ -92,6 +92,10 @@
                 <h2 class="section-title">The Inventory</h2>
                 <p class="section-desc">Premium Toyota Vehicles & Genuine Parts.</p>
             </div>
+            <div class="search-container magnetic" style="max-width: 500px; margin: 2rem auto; position: relative;">
+                <input type="text" id="inventory-search" placeholder="Search for any car, model, or part..." style="width: 100%; padding: 1rem 1.5rem; border-radius: 30px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit; font-size: 1rem; backdrop-filter: blur(10px); outline: none; transition: border-color 0.3s;">
+                <i data-lucide="search" style="position: absolute; right: 1.5rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+            </div>
             <div class="filters">
                 <button class="filter-btn active magnetic" data-filter="all">All</button>
                 <button class="filter-btn magnetic" data-filter="Cars">All Cars</button>
@@ -213,6 +217,6 @@
     </div>
 
     <!-- Custom JS (ES5 for old phones) -->
-    <script src="script.es5.js?v=6"></script>
+    <script src="script.es5.js?v=7"></script>
 </body>
 </html>
