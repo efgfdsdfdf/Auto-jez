@@ -38,6 +38,7 @@ const carPriceInput = document.getElementById('car-price');
 const carImageInput = document.getElementById('car-image');
 const carSpecsInput = document.getElementById('car-specs');
 const carStatusInput = document.getElementById('car-status');
+const carQuantityInput = document.getElementById('car-quantity');
 
 
 // Initialization
@@ -121,6 +122,7 @@ function renderAdminTable() {
             <td><strong>${car.make}</strong> ${car.model}${conditionText}</td>
             <td>${car.category}</td>
             <td>₦${car.price}</td>
+            <td><span style="font-weight: 600; color: ${(car.quantity || 1) === 0 ? '#ff4d4d' : (car.quantity || 1) <= 2 ? '#FFA500' : '#4CAF50'};">${car.quantity !== undefined ? car.quantity : 1}</span></td>
             <td>${statusBadge}</td>
             <td>
                 <div class="action-btns">
@@ -180,6 +182,7 @@ window.openEditModal = function(id) {
     carImageInput.value = car.media ? car.media.join(', ') : car.image;
     carSpecsInput.value = car.specs ? car.specs.join(', ') : '';
     if(carStatusInput) carStatusInput.value = car.status || 'available';
+    if(carQuantityInput) carQuantityInput.value = car.quantity !== undefined ? car.quantity : 1;
     
     if (typeof renderMediaPreview === 'function') renderMediaPreview();
     
@@ -208,7 +211,8 @@ async function handleFormSubmit(e) {
         media: mediaArray,
         image: mediaArray[0] || "",
         specs: specsArray,
-        status: carStatusInput ? carStatusInput.value : 'available'
+        status: carStatusInput ? carStatusInput.value : 'available',
+        quantity: carQuantityInput ? parseInt(carQuantityInput.value) || 0 : 1
     };
     
     if (editingId) {
