@@ -37,6 +37,7 @@ const carConditionInput = document.getElementById('car-condition');
 const carPriceInput = document.getElementById('car-price');
 const carImageInput = document.getElementById('car-image');
 const carSpecsInput = document.getElementById('car-specs');
+const carStatusInput = document.getElementById('car-status');
 
 
 // Initialization
@@ -106,14 +107,24 @@ function renderAdminTable() {
 
     inventory.forEach(car => {
         const conditionText = car.condition ? `<br><small class="text-gray">${car.condition}</small>` : '';
+        const isSold = car.status === 'sold';
+        const statusBadge = isSold 
+            ? '<span style="background: rgba(255,77,77,0.2); color: #ff4d4d; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">SOLD</span>'
+            : '<span style="background: rgba(76,175,80,0.2); color: #4CAF50; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Available</span>';
+        const soldBtn = isSold
+            ? `<button class="btn btn-secondary btn-small" style="background: rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50;" onclick="toggleSold('${car.id}')">Relist</button>`
+            : `<button class="btn btn-secondary btn-small" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;" onclick="toggleSold('${car.id}')">Mark Sold</button>`;
         const tr = document.createElement('tr');
+        if (isSold) tr.style.opacity = '0.6';
         tr.innerHTML = `
             <td><img src="${car.media ? car.media[0] : car.image}" alt="${car.make}" onerror="this.src='https://via.placeholder.com/60x40?text=Error'"></td>
             <td><strong>${car.make}</strong> ${car.model}${conditionText}</td>
             <td>${car.category}</td>
             <td>₦${car.price}</td>
+            <td>${statusBadge}</td>
             <td>
                 <div class="action-btns">
+                    ${soldBtn}
                     <button class="btn btn-secondary btn-small" onclick="openEditModal('${car.id}')"><i data-lucide="edit"></i></button>
                     <button class="btn btn-primary btn-small" style="background-color: var(--error);" onclick="deleteCar('${car.id}')"><i data-lucide="trash"></i></button>
                 </div>
@@ -168,6 +179,7 @@ window.openEditModal = function(id) {
     carPriceInput.value = car.price;
     carImageInput.value = car.media ? car.media.join(', ') : car.image;
     carSpecsInput.value = car.specs ? car.specs.join(', ') : '';
+    if(carStatusInput) carStatusInput.value = car.status || 'available';
     
     if (typeof renderMediaPreview === 'function') renderMediaPreview();
     
@@ -195,7 +207,8 @@ async function handleFormSubmit(e) {
         price: carPriceInput.value,
         media: mediaArray,
         image: mediaArray[0] || "",
-        specs: specsArray
+        specs: specsArray,
+        status: carStatusInput ? carStatusInput.value : 'available'
     };
     
     if (editingId) {
@@ -226,6 +239,14 @@ window.deleteCar = async function(id) {
             localStorage.setItem('autojez_cart', JSON.stringify(cart));
         }
     }
+}
+
+window.toggleSold = async function(id) {
+    const car = inventory.find(c => c.id === id);
+    if (!car) return;
+    car.status = car.status === 'sold' ? 'available' : 'sold';
+    await saveInventory();
+    renderAdminTable();
 }
 
 // Event Listeners

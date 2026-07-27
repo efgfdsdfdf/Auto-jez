@@ -414,6 +414,35 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     flex-direction: column;
     height: 100%;
 }
+
+/* Sold Car Styles */
+.car-sold {
+    opacity: 0.65;
+    filter: grayscale(40%);
+}
+.car-sold:hover {
+    opacity: 0.8;
+    filter: grayscale(20%);
+}
+.sold-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+.sold-overlay span {
+    background: #ff4d4d;
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    padding: 0.5rem 2rem;
+    border-radius: 4px;
+    transform: rotate(-15deg);
+}
 .car-img-wrapper {
     position: relative;
     border-radius: 8px;

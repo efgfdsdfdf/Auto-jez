@@ -253,36 +253,47 @@ function renderCars() {
         return;
     }
 
+    // Sort: available cars first, sold cars at the bottom
+    filteredCars.sort((a, b) => {
+        const aS = a.status === 'sold' ? 1 : 0;
+        const bS = b.status === 'sold' ? 1 : 0;
+        return aS - bS;
+    });
+
     filteredCars.forEach((car, index) => {
         const specsHtml = car.specs ? car.specs.slice(0, 2).map(s => `<span class="car-spec-item">${s.trim()}</span>`).join('') : '';
         const thumb = (car.media && car.media.length > 0) ? car.media[0] : car.image;
+        const isSold = car.status === 'sold';
         
         const card = document.createElement('div');
-        card.className = 'car-card magnetic';
+        card.className = 'car-card magnetic' + (isSold ? ' car-sold' : '');
         card.style.opacity = '0';
         card.style.transform = 'translateY(50px)';
         card.onclick = () => window.openDetails(car.id);
         
         const conditionBadgeHtml = car.condition ? `<span class="inline-badge condition-badge">${car.condition}</span>` : '';
+        const soldBadgeHtml = isSold ? `<span class="inline-badge" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;">SOLD</span>` : '';
 
         card.innerHTML = `
             <div class="car-card-inner">
                 <div class="car-img-wrapper">
                     <img src="${thumb}" alt="${car.make} ${car.model}" class="car-img" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Not+Found'">
+                    ${isSold ? '<div class="sold-overlay"><span>SOLD</span></div>' : ''}
                 </div>
                 <div class="car-details">
                     <h3 class="car-title">${car.make} <br><strong>${car.model}</strong></h3>
                     <div class="inline-badges">
                         <span class="inline-badge">${car.category}</span>
                         ${conditionBadgeHtml}
+                        ${soldBadgeHtml}
                     </div>
                     <div class="car-specs-list">
                         ${specsHtml}
                     </div>
                     <div class="car-price-row">
-                        <span class="car-price">₦${car.price}</span>
+                        <span class="car-price">${isSold ? '<s>₦' + car.price + '</s>' : '₦' + car.price}</span>
                         <button class="btn btn-secondary magnetic-btn" onclick="event.stopPropagation(); openDetails('${car.id}')">
-                            Details
+                            ${isSold ? 'View' : 'Details'}
                         </button>
                     </div>
                 </div>
@@ -406,10 +417,21 @@ window.openDetails = function(carId) {
     renderCarousel();
     
     // Actions
-    document.getElementById('details-acquire-btn').onclick = () => {
-        addToCart(car.id);
-        closeDetails();
-    };
+    const acquireBtn = document.getElementById('details-acquire-btn');
+    if (car.status === 'sold') {
+        acquireBtn.innerText = 'SOLD';
+        acquireBtn.disabled = true;
+        acquireBtn.style.opacity = '0.5';
+        acquireBtn.onclick = null;
+    } else {
+        acquireBtn.innerText = 'Acquire Now';
+        acquireBtn.disabled = false;
+        acquireBtn.style.opacity = '1';
+        acquireBtn.onclick = () => {
+            addToCart(car.id);
+            closeDetails();
+        };
+    }
     
     document.getElementById('details-modal').classList.add('active');
     sidebarOverlay.classList.add('active');
