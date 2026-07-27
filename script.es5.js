@@ -234,7 +234,7 @@ function renderCars() {
   carGrid.innerHTML = '';
   let filteredCars = inventory;
   if (currentFilter === 'Cars') {
-    filteredCars = inventory.filter(car => car.category !== 'Spare Parts');
+    filteredCars = inventory.filter(car => car.category !== 'Spare Parts' && car.category !== 'Engines');
   } else if (currentFilter !== 'all') {
     filteredCars = inventory.filter(car => car.category === currentFilter);
   }
