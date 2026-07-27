@@ -276,7 +276,7 @@ function renderCars() {
         const conditionBadgeHtml = car.condition ? `<span class="inline-badge condition-badge">${car.condition}</span>` : '';
         const soldBadgeHtml = isSold ? `<span class="inline-badge" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;">SOLD</span>` : '';
         const outOfStockBadgeHtml = isOutOfStock ? `<span class="inline-badge" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;">Out of Stock</span>` : '';
-        const stockBadgeHtml = (!isSold && !isOutOfStock && qty <= 3) ? `<span class="inline-badge" style="background: rgba(255,165,0,0.2); border-color: #FFA500; color: #FFA500;">Only ${qty} left!</span>` : '';
+        const stockBadgeHtml = (!isSold && !isOutOfStock) ? `<span class="inline-badge" style="background: ${qty <= 3 ? 'rgba(255,165,0,0.2); border-color: #FFA500; color: #FFA500;' : 'rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50;'}">${qty <= 3 ? 'Only ' + qty + ' left!' : qty + ' in stock'}</span>` : '';
 
         const overlayHtml = isSold ? '<div class="sold-overlay"><span>SOLD</span></div>' : (isOutOfStock ? '<div class="sold-overlay"><span style="background:#555;">OUT OF STOCK</span></div>' : '');
 
@@ -412,8 +412,8 @@ window.openDetails = function(carId) {
     // Badges
     const qty = car.quantity !== undefined ? car.quantity : 1;
     const isOutOfStock = car.status !== 'sold' && qty === 0;
-    const stockInfoHtml = (car.status !== 'sold' && !isOutOfStock && qty <= 3) 
-        ? `<span class="car-badge" style="position:relative; top:0; left:0; background: rgba(255,165,0,0.2); border-color: #FFA500; color: #FFA500;">Only ${qty} left!</span>` 
+    const stockInfoHtml = (car.status !== 'sold' && !isOutOfStock) 
+        ? `<span class="car-badge" style="position:relative; top:0; left:0; background: ${qty <= 3 ? 'rgba(255,165,0,0.2); border-color: #FFA500; color: #FFA500;' : 'rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50;'}">${qty <= 3 ? 'Only ' + qty + ' left!' : qty + ' in stock'}</span>` 
         : '';
     document.getElementById('details-badges').innerHTML = `
         <span class="car-badge" style="position:relative; top:0; left:0;">${car.category}</span>
