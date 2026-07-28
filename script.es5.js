@@ -66,6 +66,10 @@ const defaultCars = [{
   specs: ["Complete Assembly", "Low Mileage", "Tested & Working"]
 }];
 const WHATSAPP_NUMBER = "2348032654858";
+const ITEMS_PER_PAGE = 20;
+let currentPage = 1;
+
+// Global State
 let inventory = [];
 let cart = [];
 let currentFilter = 'all';
@@ -252,16 +256,21 @@ function renderCars() {
                 <a href="https://wa.me/${emptyTargetNumber}?text=Hello%20${encodeURIComponent(emptyTargetName)},%20I%20am%20looking%20for%20a%20specific%20vehicle/part%20that%20isn't%20listed%20on%20your%20site." target="_blank" class="btn btn-primary magnetic-btn" style="padding: 1rem 2rem; border-radius: 30px;">Contact Business Owner</a>
             </div>
         `;
+    document.getElementById('pagination-controls').style.display = 'none';
     return;
   }
+  const totalPages = Math.ceil(filteredCars.length / ITEMS_PER_PAGE) || 1;
+  if (currentPage > totalPages) currentPage = totalPages;
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedCars = filteredCars.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   // Sort: available cars first, sold cars at the bottom
-  filteredCars.sort((a, b) => {
+  paginatedCars.sort((a, b) => {
     const aS = a.status === 'sold' ? 1 : 0;
     const bS = b.status === 'sold' ? 1 : 0;
     return aS - bS;
   });
-  filteredCars.forEach((car, index) => {
+  paginatedCars.forEach((car, index) => {
     const specsHtml = car.specs ? car.specs.slice(0, 2).map(s => `<span class="car-spec-item">${s.trim()}</span>`).join('') : '';
     const thumb = car.media && car.media.length > 0 ? car.media[0] : car.image;
     const isSold = car.status === 'sold';
@@ -306,6 +315,23 @@ function renderCars() {
         `;
     carGrid.appendChild(card);
   });
+
+  // Update Pagination UI
+  const paginationControls = document.getElementById('pagination-controls');
+  if (totalPages > 1) {
+    paginationControls.style.display = 'flex';
+    document.getElementById('page-info').innerText = `Page ${currentPage} of ${totalPages}`;
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.style.opacity = currentPage === 1 ? '0.3' : '1';
+    prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.style.opacity = currentPage === totalPages ? '0.3' : '1';
+    nextBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
+  } else {
+    paginationControls.style.display = 'none';
+  }
 
   // Animate cars in
   gsap.to('.car-card', {
@@ -536,6 +562,7 @@ function setupEventListeners() {
   if (searchInput) {
     searchInput.addEventListener('input', e => {
       searchQuery = e.target.value;
+      currentPage = 1;
       renderCars();
     });
   }
@@ -544,9 +571,34 @@ function setupEventListeners() {
       filterBtns.forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
       currentFilter = e.target.getAttribute('data-filter');
+      currentPage = 1;
       renderCars();
     });
   });
+
+  // Pagination event listeners
+  const prevPageBtn = document.getElementById('prev-page');
+  const nextPageBtn = document.getElementById('next-page');
+  if (prevPageBtn) {
+    prevPageBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderCars();
+        document.getElementById('inventory').scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    });
+  }
+  if (nextPageBtn) {
+    nextPageBtn.addEventListener('click', () => {
+      currentPage++;
+      renderCars();
+      document.getElementById('inventory').scrollIntoView({
+        behavior: 'smooth'
+      });
+    });
+  }
   cartBtn.addEventListener('click', openCart);
   closeCartBtn.addEventListener('click', closeCart);
   sidebarOverlay.addEventListener('click', () => {
