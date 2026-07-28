@@ -83,6 +83,19 @@ async function loadInventory() {
         console.error("Failed to load DB:", e);
         inventory = [];
     }
+    
+    // Auto-select a category that actually has items so the admin doesn't see an empty table
+    const hasItems = inventory.some(c => c.category === currentAdminFilter);
+    if (!hasItems && inventory.length > 0) {
+        currentAdminFilter = inventory[0].category;
+        document.querySelectorAll('.admin-filters .filter-btn').forEach(b => {
+            b.classList.remove('active');
+            if (b.getAttribute('data-filter') === currentAdminFilter) {
+                b.classList.add('active');
+            }
+        });
+    }
+    
     renderAdminTable();
 }
 
@@ -244,7 +257,15 @@ async function handleFormSubmit(e) {
             inventory[index] = carData;
         }
     } else {
-        inventory.push(carData);
+        inventory.unshift(carData); // Add to the top
+        // Switch to this category so they see the newly added item instantly!
+        currentAdminFilter = carData.category;
+        document.querySelectorAll('.admin-filters .filter-btn').forEach(b => {
+            b.classList.remove('active');
+            if (b.getAttribute('data-filter') === currentAdminFilter) {
+                b.classList.add('active');
+            }
+        });
     }
     
     await saveInventory();

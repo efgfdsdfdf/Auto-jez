@@ -281,32 +281,39 @@ function renderCars() {
     card.style.opacity = '0';
     card.style.transform = 'translateY(50px)';
     card.onclick = () => window.openDetails(car.id);
-    const conditionBadgeHtml = car.condition ? `<span class="inline-badge condition-badge">${car.condition}</span>` : '';
-    const soldBadgeHtml = isSold ? `<span class="inline-badge" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;">SOLD</span>` : '';
-    const outOfStockBadgeHtml = isOutOfStock ? `<span class="inline-badge" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;">Out of Stock</span>` : '';
-    const stockBadgeHtml = !isSold && !isOutOfStock ? `<span class="inline-badge" style="background: ${qty <= 3 ? 'rgba(255,165,0,0.2); border-color: #FFA500; color: #FFA500;' : 'rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50;'}">${qty <= 3 ? 'Only ' + qty + ' left!' : qty + ' in stock'}</span>` : '';
+    const isNewCondition = car.condition && car.condition.toLowerCase() === 'brand new';
+    const newBadgeHTML = isNewCondition ? `<span class="inline-badge brand-new-badge">Brand New</span>` : '';
+    const specsHTML = (car.specs || []).map(spec => `<li><i data-lucide="check-circle" style="width: 14px; height: 14px; color: var(--accent-primary);"></i> ${spec}</li>`).join('');
     const overlayHtml = isSold ? '<div class="sold-overlay"><span>SOLD</span></div>' : isOutOfStock ? '<div class="sold-overlay"><span style="background:#555;">OUT OF STOCK</span></div>' : '';
+    let stockBadge = '';
+    if (isSold) {
+      stockBadge = `<div class="badge" style="background: var(--error); color: white; width: auto; padding: 0.2rem 0.6rem; border-radius: 12px; right: 10px; top: 10px; z-index: 5;">SOLD</div>`;
+    } else if (isOutOfStock) {
+      stockBadge = `<div class="badge" style="background: var(--error); color: white; width: auto; padding: 0.2rem 0.6rem; border-radius: 12px; right: 10px; top: 10px; z-index: 5;">Out of Stock</div>`;
+    } else if (typeof car.quantity === 'number' && car.quantity <= 3) {
+      stockBadge = `<div class="badge" style="background: #f39c12; color: white; width: auto; padding: 0.2rem 0.6rem; border-radius: 12px; right: 10px; top: 10px; z-index: 5;">Only ${car.quantity} left</div>`;
+    }
     card.innerHTML = `
+            ${stockBadge}
             <div class="car-card-inner">
-                <div class="car-img-wrapper">
-                    <img src="${thumb}" alt="${car.make} ${car.model}" class="car-img" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Not+Found'">
+                <div class="car-img-wrapper" onclick="window.openDetails('${car.id}')">
+                    <img src="${thumb}" alt="${car.make}" class="car-img" onerror="this.src='https://via.placeholder.com/600x400?text=Image+Not+Found'">
                     ${overlayHtml}
                 </div>
-                <div class="car-details">
-                    <h3 class="car-title">${car.make} <br><strong>${car.model}</strong></h3>
+                <div class="car-info">
                     <div class="inline-badges">
-                        <span class="inline-badge">${car.category}</span>
-                        ${conditionBadgeHtml}
-                        ${soldBadgeHtml}
-                        ${outOfStockBadgeHtml}
-                        ${stockBadgeHtml}
+                        <span class="inline-badge category-badge">${car.category}</span>
+                        ${newBadgeHTML}
                     </div>
-                    <div class="car-specs-list">
-                        ${specsHtml}
+                    <h3 class="car-title">${car.make} <strong>${car.model}</strong></h3>
+                    <div class="car-specs">
+                        <ul class="car-specs-list">
+                            ${specsHTML}
+                        </ul>
                     </div>
                     <div class="car-price-row">
                         <span class="car-price">${isSold || isOutOfStock ? '<s>₦' + car.price + '</s>' : '₦' + car.price}</span>
-                        <button class="btn btn-secondary magnetic-btn" onclick="event.stopPropagation(); openDetails('${car.id}')">
+                        <button class="btn btn-secondary magnetic-btn" onclick="event.stopPropagation(); window.openDetails('${car.id}')">
                             ${isSold ? 'View' : isOutOfStock ? 'View' : 'Details'}
                         </button>
                     </div>
