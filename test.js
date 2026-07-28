@@ -325,21 +325,19 @@ function renderCars() {
 
   // Update Pagination UI
   const paginationControls = document.getElementById('pagination-controls');
-  if (paginationControls) {
-    if (totalPages > 1) {
-      paginationControls.style.display = 'flex';
-      document.getElementById('page-info').innerText = `Page ${currentPage} of ${totalPages}`;
-      const prevBtn = document.getElementById('prev-page');
-      const nextBtn = document.getElementById('next-page');
-      prevBtn.disabled = currentPage === 1;
-      prevBtn.style.opacity = currentPage === 1 ? '0.3' : '1';
-      prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
-      nextBtn.disabled = currentPage === totalPages;
-      nextBtn.style.opacity = currentPage === totalPages ? '0.3' : '1';
-      nextBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
-    } else {
-      paginationControls.style.display = 'none';
-    }
+  if (totalPages > 1) {
+    paginationControls.style.display = 'flex';
+    document.getElementById('page-info').innerText = `Page ${currentPage} of ${totalPages}`;
+    const prevBtn = document.getElementById('prev-page');
+    const nextBtn = document.getElementById('next-page');
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.style.opacity = currentPage === 1 ? '0.3' : '1';
+    prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.style.opacity = currentPage === totalPages ? '0.3' : '1';
+    nextBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
+  } else {
+    paginationControls.style.display = 'none';
   }
 
   // Animate cars in

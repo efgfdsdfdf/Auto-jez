@@ -111,6 +111,13 @@
         <div id="car-grid" class="car-grid">
             <!-- Cars will be injected here via JavaScript -->
         </div>
+
+        <!-- Pagination Controls -->
+        <div id="pagination-controls" style="display: none; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem;">
+            <button id="prev-page" class="btn btn-secondary magnetic-btn" style="padding: 0.5rem 1rem;"><i data-lucide="chevron-left"></i> Prev</button>
+            <span id="page-info" style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Page 1 of 1</span>
+            <button id="next-page" class="btn btn-secondary magnetic-btn" style="padding: 0.5rem 1rem;">Next <i data-lucide="chevron-right"></i></button>
+        </div>
     </section>
 
     <!-- About Section -->
@@ -280,6 +287,6 @@
     <script src="https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js"></script>
 
     <!-- Custom JS (ES5 for old phones) -->
-    <script src="script.es5.js?v=38"></script>
+    <script src="script.es5.js?v=39"></script>
 </body>
 </html>
