@@ -243,11 +243,13 @@ function renderCars() {
     }
 
     if (filteredCars.length === 0) {
+        const emptyTargetNumber = (currentFilter === 'Engines') ? '2349133457546' : '2348032654858';
+        const emptyTargetName = (currentFilter === 'Engines') ? 'KIZO Holdings' : 'Auto Jez';
         carGrid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; background: var(--glass-bg); border-radius: 16px; border: 1px solid var(--border-color);">
                 <h3 style="font-size: 1.8rem; margin-bottom: 1rem; font-weight: 300;">Not seeing what you're looking for?</h3>
                 <p style="color: var(--text-muted); margin-bottom: 2rem; font-size: 1.1rem;">We can source any premium vehicle or part specifically for you.</p>
-                <a href="https://wa.me/2348032654858?text=Hello%20Auto%20Jez,%20I%20am%20looking%20for%20a%20specific%20vehicle/part%20that%20isn't%20listed%20on%20your%20site." target="_blank" class="btn btn-primary magnetic-btn" style="padding: 1rem 2rem; border-radius: 30px;">Contact Business Owner</a>
+                <a href="https://wa.me/${emptyTargetNumber}?text=Hello%20${encodeURIComponent(emptyTargetName)},%20I%20am%20looking%20for%20a%20specific%20vehicle/part%20that%20isn't%20listed%20on%20your%20site." target="_blank" class="btn btn-primary magnetic-btn" style="padding: 1rem 2rem; border-radius: 30px;">Contact Business Owner</a>
             </div>
         `;
         return;
@@ -387,7 +389,12 @@ function closeCart() {
 
 function handleCheckout() {
     if (cart.length === 0) return;
-    let message = "Greetings Auto Jez. I wish to acquire the following masterpieces from your collection:\n\n";
+    
+    const hasEngine = cart.some(car => car.category === 'Engines');
+    const targetNumber = hasEngine ? '2349133457546' : WHATSAPP_NUMBER;
+    const targetName = hasEngine ? 'KIZO Holdings' : 'Auto Jez';
+    
+    let message = `Greetings ${targetName}. I wish to acquire the following masterpieces from your collection:\n\n`;
     cart.forEach((car, index) => {
         message += `${index + 1}. ${car.make} ${car.model} (₦${car.price})\n`;
     });
@@ -395,7 +402,7 @@ function handleCheckout() {
     message += "I await your response to proceed with the transaction.";
 
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/${targetNumber}?text=${encodedMessage}`, '_blank');
 }
 
 // Details Modal & Carousel
