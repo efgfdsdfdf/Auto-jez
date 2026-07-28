@@ -413,6 +413,7 @@ window.openDetails = function (carId) {
   currentCarouselMedia = car.media && car.media.length > 0 ? car.media : [car.image];
   currentCarouselIndex = 0;
   renderCarousel();
+  startCarouselAutoScroll();
 
   // Actions
   const acquireBtn = document.getElementById('details-acquire-btn');
@@ -439,9 +440,36 @@ window.openDetails = function (carId) {
   sidebarOverlay.classList.add('active');
 };
 window.closeDetails = function () {
+  stopCarouselAutoScroll();
   document.getElementById('details-modal').classList.remove('active');
   sidebarOverlay.classList.remove('active');
 };
+let carouselAutoScrollTimer = null;
+function startCarouselAutoScroll() {
+  stopCarouselAutoScroll();
+  if (currentCarouselMedia.length <= 1) return;
+  const mediaEls = document.querySelectorAll('.carousel-media');
+  const currentMedia = mediaEls[currentCarouselIndex];
+  if (currentMedia && currentMedia.tagName === 'VIDEO') {
+    currentMedia.onended = () => {
+      goToCarouselIndex(currentCarouselIndex + 1);
+    };
+  } else {
+    carouselAutoScrollTimer = setTimeout(() => {
+      goToCarouselIndex(currentCarouselIndex + 1);
+    }, 3000);
+  }
+}
+function stopCarouselAutoScroll() {
+  if (carouselAutoScrollTimer) {
+    clearTimeout(carouselAutoScrollTimer);
+    carouselAutoScrollTimer = null;
+  }
+  const mediaEls = document.querySelectorAll('.carousel-media');
+  if (mediaEls[currentCarouselIndex]) {
+    mediaEls[currentCarouselIndex].onended = null;
+  }
+}
 function renderCarousel() {
   const carousel = document.getElementById('details-carousel');
   // Clear old media but keep buttons and dots
@@ -454,10 +482,14 @@ function renderCarousel() {
     if (url.toLowerCase().endsWith('.mp4')) {
       mediaEl = document.createElement('video');
       mediaEl.src = url;
-      mediaEl.controls = true;
+      // No controls attribute, click to play/pause
       mediaEl.autoplay = i === 0;
       mediaEl.muted = true;
-      mediaEl.loop = true;
+      mediaEl.loop = false; // Must be false so onended fires
+      mediaEl.style.cursor = 'pointer';
+      mediaEl.onclick = () => {
+        if (mediaEl.paused) mediaEl.play();else mediaEl.pause();
+      };
     } else {
       mediaEl = document.createElement('img');
       mediaEl.src = url;
@@ -473,6 +505,7 @@ function renderCarousel() {
   document.getElementById('carousel-next').style.display = currentCarouselMedia.length > 1 ? 'flex' : 'none';
 }
 function goToCarouselIndex(index) {
+  stopCarouselAutoScroll();
   if (index < 0) index = currentCarouselMedia.length - 1;
   if (index >= currentCarouselMedia.length) index = 0;
   const mediaEls = document.querySelectorAll('.carousel-media');
@@ -483,7 +516,11 @@ function goToCarouselIndex(index) {
   currentCarouselIndex = index;
   mediaEls[currentCarouselIndex].classList.add('active');
   dotEls[currentCarouselIndex].classList.add('active');
-  if (mediaEls[currentCarouselIndex].tagName === 'VIDEO') mediaEls[currentCarouselIndex].play();
+  if (mediaEls[currentCarouselIndex].tagName === 'VIDEO') {
+    mediaEls[currentCarouselIndex].currentTime = 0;
+    mediaEls[currentCarouselIndex].play();
+  }
+  startCarouselAutoScroll();
 }
 function setupEventListeners() {
   const searchInput = document.getElementById('inventory-search');
