@@ -11,7 +11,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=24">
 </head>
 <body class="admin-body">
     <!-- Login Screen -->
@@ -54,23 +54,8 @@
                 </button>
             </header>
 
-            <div class="table-container">
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>
-                            <th>Make & Model</th>
-                            <th>Category</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-car-list">
-                        <!-- Car rows injected via JS -->
-                    </tbody>
-                </table>
+            <div class="table-container" id="admin-inventory-container">
+                <!-- Tables grouped by category injected via JS -->
             </div>
         </main>
     </div>
@@ -99,15 +84,16 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Category</label>
-                            <select id="car-category" required>
-                                <option value="Sedans">Sedans</option>
-                                <option value="SUVs">SUVs</option>
-                                <option value="Pickups">Pickups</option>
-                                <option value="Engines">Engines</option>
-                                <option value="Spare Parts">Spare Parts</option>
-                                <option value="New Parts">New Parts</option>
-                            </select>
+                            <label>Category (Type new or select existing)</label>
+                            <input type="text" id="car-category" list="category-list" required placeholder="e.g. Sedans, Trucks, etc.">
+                            <datalist id="category-list">
+                                <option value="Sedans">
+                                <option value="SUVs">
+                                <option value="Pickups">
+                                <option value="Engines">
+                                <option value="Spare Parts">
+                                <option value="New Parts">
+                            </datalist>
                         </div>
                         <div class="form-group">
                             <label>Condition</label>
