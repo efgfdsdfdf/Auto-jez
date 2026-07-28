@@ -390,9 +390,12 @@ function closeCart() {
 function handleCheckout() {
     if (cart.length === 0) return;
     
-    const hasEngine = cart.some(car => car.category === 'Engines');
-    const targetNumber = hasEngine ? '2349133457546' : WHATSAPP_NUMBER;
-    const targetName = hasEngine ? 'KIZO Holdings' : 'Auto Jez';
+    // Check if the cart contains ONLY engines
+    const onlyEngines = cart.every(car => car.category === 'Engines');
+    
+    // If it's only engines, go to KIZO. If there's a mix (or no engines), go to Auto Jez.
+    const targetNumber = onlyEngines ? '2349133457546' : WHATSAPP_NUMBER;
+    const targetName = onlyEngines ? 'KIZO Holdings' : 'Auto Jez';
     
     let message = `Greetings ${targetName}. I wish to acquire the following masterpieces from your collection:\n\n`;
     cart.forEach((car, index) => {
