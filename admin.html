@@ -11,7 +11,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css?v=30">
+    <link rel="stylesheet" href="styles.css?v=31">
 </head>
 <body class="admin-body">
     <!-- Login Screen -->
@@ -22,8 +22,11 @@
                 AUTO JEZ ADMIN
             </a>
             <p class="text-gray mb-6 text-center">Enter passcode to access inventory</p>
-            <div class="form-group">
-                <input type="password" id="passcode-input" placeholder="Enter Admin Passcode (hint: 1234)">
+            <div class="form-group" style="position: relative;">
+                <input type="password" id="passcode-input" placeholder="Enter Admin Passcode (hint: 1234)" style="padding-right: 40px;">
+                <button id="toggle-password" type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); cursor: pointer; padding: 0;">
+                    <i data-lucide="eye" id="toggle-password-icon"></i>
+                </button>
             </div>
             <button id="login-btn" class="btn btn-primary btn-block">Login</button>
             <p id="login-error" class="error-msg"></p>

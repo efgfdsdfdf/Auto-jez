@@ -292,6 +292,22 @@ function setupEventListeners() {
     passcodeInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleLogin();
     });
+    
+    const togglePasswordBtn = document.getElementById('toggle-password');
+    const togglePasswordIcon = document.getElementById('toggle-password-icon');
+    if (togglePasswordBtn) {
+        togglePasswordBtn.addEventListener('click', () => {
+            if (passcodeInput.type === 'password') {
+                passcodeInput.type = 'text';
+                togglePasswordIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                passcodeInput.type = 'password';
+                togglePasswordIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+    }
+
     logoutBtn.addEventListener('click', handleLogout);
     
     addCarBtn.addEventListener('click', openAddModal);
