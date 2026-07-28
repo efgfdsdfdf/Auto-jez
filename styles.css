@@ -799,8 +799,21 @@ footer {
     .admin-main { padding: 2rem 5% 80px 5%; } /* make room for bottom nav */
     
     /* Mobile side-by-side grid */
-    .car-grid { gap: 0.5rem; }
-    .car-card { grid-column: span 6 !important; min-width: 0; }
+    .car-grid { 
+        gap: 0; 
+        margin-left: calc(-1 * var(--container-padding)); 
+        margin-right: calc(-1 * var(--container-padding)); 
+    }
+    .car-card { 
+        grid-column: span 6 !important; 
+        min-width: 0; 
+        border-radius: 0; 
+        border-left: none; 
+        border-right: none; 
+    }
+    .car-card:nth-child(odd) { 
+        border-right: 1px solid var(--border-color); 
+    }
     .car-card-inner { padding: 0.5rem; }
     .car-title { font-size: 0.85rem; margin-bottom: 0.4rem; word-wrap: break-word; hyphens: auto; line-height: 1.2; font-weight: 600; }
     .car-title strong { font-size: 1rem; font-weight: 800; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 0.2rem; }
