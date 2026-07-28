@@ -809,4 +809,16 @@ footer {
     .contact-link { display: none; }
     .logo { font-size: 1.2rem; }
     .carousel-container { height: 250px; }
+    
+    /* Admin Table Mobile Fixes */
+    .admin-filters { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 0.5rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .admin-filters::-webkit-scrollbar { display: none; }
+    
+    .table-container { background: transparent; border: none; padding: 0; }
+    .admin-table thead { display: none; }
+    .admin-table, .admin-table tbody, .admin-table tr, .admin-table td { display: block; width: 100%; }
+    .admin-table tr { margin-bottom: 1rem; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; background: var(--glass-bg); position: relative; }
+    .admin-table td { padding: 0.5rem 0; border: none; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .admin-table td.hide-mobile { display: none !important; }
+    .admin-table td:last-child { margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem; justify-content: flex-start; }
 }

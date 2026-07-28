@@ -11,7 +11,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css?v=25">
+    <link rel="stylesheet" href="styles.css?v=26">
 </head>
 <body class="admin-body">
     <!-- Login Screen -->
@@ -54,8 +54,33 @@
                 </button>
             </header>
 
-            <div class="table-container" id="admin-inventory-container">
-                <!-- Tables grouped by category injected via JS -->
+            <div class="filters admin-filters" style="margin-bottom: 2rem;">
+                <button class="filter-btn active magnetic" data-filter="all">All</button>
+                <button class="filter-btn magnetic" data-filter="Cars">All Cars</button>
+                <button class="filter-btn magnetic" data-filter="Spare Parts">Spare Parts</button>
+                <button class="filter-btn magnetic" data-filter="New Parts">New Parts</button>
+                <button class="filter-btn magnetic" data-filter="Engines">Engines</button>
+                <button class="filter-btn magnetic" data-filter="Sedans">Sedans</button>
+                <button class="filter-btn magnetic" data-filter="SUVs">SUVs</button>
+                <button class="filter-btn magnetic" data-filter="Pickups">Pickups</button>
+            </div>
+
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th class="hide-mobile">Image</th>
+                            <th>Make & Model</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-inventory-list">
+                        <!-- Items injected via JS -->
+                    </tbody>
+                </table>
             </div>
         </main>
     </div>

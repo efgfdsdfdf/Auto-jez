@@ -17,8 +17,9 @@ const loginBtn = document.getElementById('login-btn');
 const loginError = document.getElementById('login-error');
 const logoutBtn = document.getElementById('logout-btn');
 
-const inventoryContainer = document.getElementById('admin-inventory-container');
+const inventoryList = document.getElementById('admin-inventory-list');
 const addCarBtn = document.getElementById('add-car-btn');
+let currentAdminFilter = 'all';
 
 // Modal Elements
 const carModal = document.getElementById('car-modal');
@@ -99,85 +100,49 @@ async function saveInventory() {
 }
 
 function renderAdminTable() {
-    if (!inventoryContainer) return;
-    inventoryContainer.innerHTML = '';
+    if (!inventoryList) return;
+    inventoryList.innerHTML = '';
     
-    if (inventory.length === 0) {
-        inventoryContainer.innerHTML = '<div style="text-align:center; padding: 3rem; color: var(--text-muted);">No items in inventory. Add one to get started.</div>';
+    let filteredCars = inventory;
+    if (currentAdminFilter === 'Cars') {
+        filteredCars = inventory.filter(car => car.category !== 'Spare Parts' && car.category !== 'Engines' && car.category !== 'New Parts');
+    } else if (currentAdminFilter !== 'all') {
+        filteredCars = inventory.filter(car => car.category === currentAdminFilter);
+    }
+    
+    if (filteredCars.length === 0) {
+        inventoryList.innerHTML = '<tr><td colspan="6" class="text-center text-gray" style="padding: 3rem;">No items found in this category.</td></tr>';
         return;
     }
 
-    // Group inventory by category
-    const grouped = {};
-    inventory.forEach(car => {
-        const cat = car.category || 'Uncategorized';
-        if (!grouped[cat]) grouped[cat] = [];
-        grouped[cat].push(car);
-    });
-
-    // Render a table for each category
-    for (const [category, items] of Object.entries(grouped)) {
-        const section = document.createElement('div');
-        section.style.marginBottom = '3rem';
+    filteredCars.forEach(car => {
+        const conditionText = car.condition ? `<br><small class="text-gray">${car.condition}</small>` : '';
+        const isSold = car.status === 'sold';
+        const statusBadge = isSold 
+            ? '<span style="background: rgba(255,77,77,0.2); color: #ff4d4d; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">SOLD</span>'
+            : '<span style="background: rgba(76,175,80,0.2); color: #4CAF50; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Available</span>';
+        const soldBtn = isSold
+            ? `<button class="btn btn-secondary btn-small" style="background: rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50;" onclick="toggleSold('${car.id}')">Relist</button>`
+            : `<button class="btn btn-secondary btn-small" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;" onclick="toggleSold('${car.id}')">Mark Sold</button>`;
         
-        const header = document.createElement('h3');
-        header.innerText = category;
-        header.style.marginBottom = '1rem';
-        header.style.color = 'var(--accent-primary)';
-        header.style.borderBottom = '1px solid var(--border-color)';
-        header.style.paddingBottom = '0.5rem';
-        
-        const table = document.createElement('table');
-        table.className = 'admin-table';
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Make & Model</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
+        const tr = document.createElement('tr');
+        if (isSold) tr.style.opacity = '0.6';
+        tr.innerHTML = `
+            <td class="hide-mobile"><img src="${car.media ? car.media[0] : car.image}" alt="${car.make}" onerror="this.src='https://via.placeholder.com/60x40?text=Error'"></td>
+            <td><strong>${car.make}</strong> ${car.model}${conditionText}</td>
+            <td>₦${car.price}</td>
+            <td><span style="font-weight: 600; color: ${(car.quantity || 1) === 0 ? '#ff4d4d' : (car.quantity || 1) <= 2 ? '#FFA500' : '#4CAF50'};">${car.quantity !== undefined ? car.quantity : 1}</span></td>
+            <td>${statusBadge}</td>
+            <td>
+                <div class="action-btns">
+                    ${soldBtn}
+                    <button class="btn btn-secondary btn-small" onclick="openEditModal('${car.id}')"><i data-lucide="edit"></i></button>
+                    <button class="btn btn-primary btn-small" style="background-color: var(--error);" onclick="deleteCar('${car.id}')"><i data-lucide="trash"></i></button>
+                </div>
+            </td>
         `;
-        
-        const tbody = table.querySelector('tbody');
-        
-        items.forEach(car => {
-            const conditionText = car.condition ? `<br><small class="text-gray">${car.condition}</small>` : '';
-            const isSold = car.status === 'sold';
-            const statusBadge = isSold 
-                ? '<span style="background: rgba(255,77,77,0.2); color: #ff4d4d; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">SOLD</span>'
-                : '<span style="background: rgba(76,175,80,0.2); color: #4CAF50; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">Available</span>';
-            const soldBtn = isSold
-                ? `<button class="btn btn-secondary btn-small" style="background: rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50;" onclick="toggleSold('${car.id}')">Relist</button>`
-                : `<button class="btn btn-secondary btn-small" style="background: rgba(255,77,77,0.2); border-color: #ff4d4d; color: #ff4d4d;" onclick="toggleSold('${car.id}')">Mark Sold</button>`;
-            
-            const tr = document.createElement('tr');
-            if (isSold) tr.style.opacity = '0.6';
-            tr.innerHTML = `
-                <td><img src="${car.media ? car.media[0] : car.image}" alt="${car.make}" onerror="this.src='https://via.placeholder.com/60x40?text=Error'"></td>
-                <td><strong>${car.make}</strong> ${car.model}${conditionText}</td>
-                <td>₦${car.price}</td>
-                <td><span style="font-weight: 600; color: ${(car.quantity || 1) === 0 ? '#ff4d4d' : (car.quantity || 1) <= 2 ? '#FFA500' : '#4CAF50'};">${car.quantity !== undefined ? car.quantity : 1}</span></td>
-                <td>${statusBadge}</td>
-                <td>
-                    <div class="action-btns">
-                        ${soldBtn}
-                        <button class="btn btn-secondary btn-small" onclick="openEditModal('${car.id}')"><i data-lucide="edit"></i></button>
-                        <button class="btn btn-primary btn-small" style="background-color: var(--error);" onclick="deleteCar('${car.id}')"><i data-lucide="trash"></i></button>
-                    </div>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-        
-        section.appendChild(header);
-        section.appendChild(table);
-        inventoryContainer.appendChild(section);
-    }
+        inventoryList.appendChild(tr);
+    });
     
     lucide.createIcons();
 }
@@ -299,6 +264,16 @@ window.toggleSold = async function(id) {
 
 // Event Listeners
 function setupEventListeners() {
+    // Admin Filters
+    document.querySelectorAll('.admin-filters .filter-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.admin-filters .filter-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            currentAdminFilter = e.target.getAttribute('data-filter');
+            renderAdminTable();
+        });
+    });
+
     loginBtn.addEventListener('click', handleLogin);
     passcodeInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') handleLogin();
