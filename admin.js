@@ -19,7 +19,7 @@ const logoutBtn = document.getElementById('logout-btn');
 
 const inventoryList = document.getElementById('admin-inventory-list');
 const addCarBtn = document.getElementById('add-car-btn');
-let currentAdminFilter = 'all';
+let currentAdminFilter = 'Spare Parts';
 
 // Modal Elements
 const carModal = document.getElementById('car-modal');
