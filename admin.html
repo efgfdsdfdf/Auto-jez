@@ -11,7 +11,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css?v=27">
+    <link rel="stylesheet" href="styles.css?v=28">
 </head>
 <body class="admin-body">
     <!-- Login Screen -->
@@ -47,11 +47,16 @@
 
         <!-- Main Content -->
         <main class="admin-main">
-            <header class="admin-header">
+            <header class="admin-header" style="flex-wrap: wrap; gap: 1rem;">
                 <h2>Manage Inventory</h2>
-                <button id="add-car-btn" class="btn btn-primary">
-                    <i data-lucide="plus"></i> Add New Car
-                </button>
+                <div style="display: flex; gap: 1rem;">
+                    <button id="delete-category-btn" class="btn btn-secondary" style="color: #ff4d4d; border-color: rgba(255,77,77,0.3); display: none;" onclick="deleteCurrentCategory()">
+                        <i data-lucide="trash-2"></i> Delete All
+                    </button>
+                    <button id="add-car-btn" class="btn btn-primary">
+                        <i data-lucide="plus"></i> Add New Car
+                    </button>
+                </div>
             </header>
 
             <div class="filters admin-filters" style="margin-bottom: 2rem;">

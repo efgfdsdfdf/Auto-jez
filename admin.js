@@ -104,10 +104,16 @@ function renderAdminTable() {
     inventoryList.innerHTML = '';
     
     let filteredCars = inventory;
+    const deleteCatBtn = document.getElementById('delete-category-btn');
+    
     if (currentAdminFilter === 'Cars') {
         filteredCars = inventory.filter(car => car.category !== 'Spare Parts' && car.category !== 'Engines' && car.category !== 'New Parts');
+        if(deleteCatBtn) deleteCatBtn.style.display = 'block';
     } else if (currentAdminFilter !== 'all') {
         filteredCars = inventory.filter(car => car.category === currentAdminFilter);
+        if(deleteCatBtn) deleteCatBtn.style.display = 'block';
+    } else {
+        if(deleteCatBtn) deleteCatBtn.style.display = 'none';
     }
     
     if (filteredCars.length === 0) {
@@ -163,14 +169,27 @@ function renderMediaPreview() {
     if (!previewContainer) return;
     previewContainer.innerHTML = '';
     const urls = carImageInput.value.split(',').map(s => s.trim()).filter(s => s);
-    urls.forEach((url) => {
+    urls.forEach((url, index) => {
         const thumb = document.createElement('div');
-        thumb.style = "width: 80px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); background: #000;";
+        thumb.style = "position: relative; width: 80px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); background: #000;";
         if (url.toLowerCase().endsWith('.mp4')) {
             thumb.innerHTML = `<video src="${url}" style="width: 100%; height: 100%; object-fit: cover;"></video>`;
         } else {
             thumb.innerHTML = `<img src="${url}" style="width: 100%; height: 100%; object-fit: cover;">`;
         }
+        
+        // Delete button for this individual image
+        const delBtn = document.createElement('button');
+        delBtn.innerHTML = '&times;';
+        delBtn.style = "position: absolute; top: 2px; right: 2px; background: rgba(255,0,0,0.8); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 14px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;";
+        delBtn.onclick = function(e) {
+            e.preventDefault();
+            urls.splice(index, 1);
+            carImageInput.value = urls.join(', ');
+            renderMediaPreview();
+        };
+        thumb.appendChild(delBtn);
+        
         previewContainer.appendChild(thumb);
     });
 }
@@ -260,6 +279,26 @@ window.toggleSold = async function(id) {
     car.status = car.status === 'sold' ? 'available' : 'sold';
     await saveInventory();
     renderAdminTable();
+}
+
+window.deleteCurrentCategory = async function() {
+    if (currentAdminFilter === 'all') return;
+    
+    let confirmMsg = `Are you sure you want to delete ALL cars in the "${currentAdminFilter}" category? This cannot be undone.`;
+    if (currentAdminFilter === 'Cars') {
+        confirmMsg = `Are you sure you want to delete ALL CARS? (This will leave Spare Parts and Engines). This cannot be undone.`;
+    }
+    
+    if (confirm(confirmMsg)) {
+        if (currentAdminFilter === 'Cars') {
+            inventory = inventory.filter(car => car.category === 'Spare Parts' || car.category === 'Engines' || car.category === 'New Parts');
+        } else {
+            inventory = inventory.filter(car => car.category !== currentAdminFilter);
+        }
+        await saveInventory();
+        renderAdminTable();
+        alert("Category deleted successfully.");
+    }
 }
 
 // Event Listeners
