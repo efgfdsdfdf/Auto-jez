@@ -11,7 +11,7 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css?v=29">
+    <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body class="admin-body">
     <!-- Login Screen -->
@@ -50,11 +50,8 @@
             <header class="admin-header" style="flex-wrap: wrap; gap: 1rem;">
                 <h2>Manage Inventory</h2>
                 <div style="display: flex; gap: 1rem;">
-                    <button id="delete-category-btn" class="btn btn-secondary" style="color: #ff4d4d; border-color: rgba(255,77,77,0.3); display: none;" onclick="deleteCurrentCategory()">
-                        <i data-lucide="trash-2"></i> Delete All
-                    </button>
                     <button id="add-car-btn" class="btn btn-primary">
-                        <i data-lucide="plus"></i> Add New Car
+                        <i data-lucide="plus"></i> Add Item
                     </button>
                 </div>
             </header>
@@ -91,10 +88,10 @@
     <!-- Add/Edit Car Modal -->
     <div id="car-modal" class="modal hidden">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title">Add New Car</h2>
-                <button id="close-modal" class="btn-icon"><i data-lucide="x"></i></button>
-            </div>
+                <div class="modal-header">
+                    <h3 id="modal-title">Add Item</h3>
+                    <button id="close-modal" class="btn btn-secondary" style="border:none; padding: 0.5rem;"><i data-lucide="x"></i></button>
+                </div>
             <div class="modal-body">
                 <form id="car-form">
                     <input type="hidden" id="car-id">

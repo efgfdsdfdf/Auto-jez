@@ -104,16 +104,11 @@ function renderAdminTable() {
     inventoryList.innerHTML = '';
     
     let filteredCars = inventory;
-    const deleteCatBtn = document.getElementById('delete-category-btn');
     
     if (currentAdminFilter === 'Cars') {
         filteredCars = inventory.filter(car => car.category !== 'Spare Parts' && car.category !== 'Engines' && car.category !== 'New Parts');
-        if(deleteCatBtn) deleteCatBtn.style.display = 'block';
     } else if (currentAdminFilter !== 'all') {
         filteredCars = inventory.filter(car => car.category === currentAdminFilter);
-        if(deleteCatBtn) deleteCatBtn.style.display = 'block';
-    } else {
-        if(deleteCatBtn) deleteCatBtn.style.display = 'none';
     }
     
     if (filteredCars.length === 0) {
@@ -156,7 +151,7 @@ function renderAdminTable() {
 // Modal Logic
 function openAddModal() {
     editingId = null;
-    document.getElementById('modal-title').innerText = "Add New Car";
+    document.getElementById('modal-title').innerText = "Add Item";
     carForm.reset();
     carImageInput.value = '';
     if (typeof renderMediaPreview === 'function') renderMediaPreview();
@@ -199,7 +194,7 @@ window.openEditModal = function(id) {
     if (!car) return;
     
     editingId = id;
-    modalTitle.innerText = "Edit Car";
+    modalTitle.innerText = "Edit Item";
     
     carIdInput.value = car.id;
     carMakeInput.value = car.make;
@@ -258,7 +253,7 @@ async function handleFormSubmit(e) {
 }
 
 window.deleteCar = async function(id) {
-    if (confirm("Are you sure you want to delete this car?")) {
+    if (confirm("Are you sure you want to delete this item?")) {
         inventory = inventory.filter(c => c.id !== id);
         await saveInventory();
         renderAdminTable();
@@ -279,26 +274,6 @@ window.toggleSold = async function(id) {
     car.status = car.status === 'sold' ? 'available' : 'sold';
     await saveInventory();
     renderAdminTable();
-}
-
-window.deleteCurrentCategory = async function() {
-    if (currentAdminFilter === 'all') return;
-    
-    let confirmMsg = `Are you sure you want to delete ALL cars in the "${currentAdminFilter}" category? This cannot be undone.`;
-    if (currentAdminFilter === 'Cars') {
-        confirmMsg = `Are you sure you want to delete ALL CARS? (This will leave Spare Parts and Engines). This cannot be undone.`;
-    }
-    
-    if (confirm(confirmMsg)) {
-        if (currentAdminFilter === 'Cars') {
-            inventory = inventory.filter(car => car.category === 'Spare Parts' || car.category === 'Engines' || car.category === 'New Parts');
-        } else {
-            inventory = inventory.filter(car => car.category !== currentAdminFilter);
-        }
-        await saveInventory();
-        renderAdminTable();
-        alert("Category deleted successfully.");
-    }
 }
 
 // Event Listeners
