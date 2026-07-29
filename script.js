@@ -79,6 +79,7 @@ let currentPage = 1;
 
 // Global State
 let inventory = [];
+let randomizedAllOrder = [];
 let cart = [];
 let currentFilter = 'all';
 let searchQuery = '';
@@ -207,6 +208,7 @@ function loadInventory() {
             if (inventory.length === 0) {
                 inventory = defaultCars;
             }
+            randomizedAllOrder = [...inventory].sort(() => Math.random() - 0.5);
         })
         .catch(e => {
             console.error("Failed to load inventory from API:", e);
@@ -229,9 +231,14 @@ function renderCars() {
     
     let filteredCars = inventory;
     
-    if (currentFilter === 'Cars') {
+    if (currentFilter === 'all') {
+        if (randomizedAllOrder.length !== inventory.length) {
+            randomizedAllOrder = [...inventory].sort(() => Math.random() - 0.5);
+        }
+        filteredCars = [...randomizedAllOrder];
+    } else if (currentFilter === 'Cars') {
         filteredCars = inventory.filter(car => car.category !== 'Spare Parts' && car.category !== 'Engines' && car.category !== 'New Parts');
-    } else if (currentFilter !== 'all') {
+    } else {
         filteredCars = inventory.filter(car => car.category === currentFilter);
     }
 
@@ -626,6 +633,9 @@ function setupEventListeners() {
             filterBtns.forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
             currentFilter = e.target.getAttribute('data-filter');
+            if (currentFilter === 'all') {
+                randomizedAllOrder = [...inventory].sort(() => Math.random() - 0.5);
+            }
             currentPage = 1;
             renderCars();
         });
