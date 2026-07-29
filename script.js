@@ -327,7 +327,7 @@ function renderCars() {
                         </ul>
                     </div>
                     <div class="car-price-row">
-                        <span class="car-price">${(isSold || isOutOfStock) ? '<s>₦' + car.price + '</s>' : '₦' + car.price}</span>
+                        <span class="car-price">${(isSold || isOutOfStock) ? '<s>₦' + car.price + '</s>' : '₦' + car.price} <small style="font-size: 0.6em; color: var(--text-muted); font-weight: 500;">(Negotiable)</small></span>
                         <button class="btn btn-secondary magnetic-btn" onclick="event.stopPropagation(); window.openDetails('${car.id}')">
                             ${isSold ? 'View' : (isOutOfStock ? 'View' : 'Details')}
                         </button>
@@ -465,7 +465,7 @@ window.openDetails = function(carId) {
     if(!car) return;
     
     document.getElementById('details-title').innerText = `${car.make} ${car.model}`;
-    document.getElementById('details-price').innerText = `₦${car.price}`;
+    document.getElementById('details-price').innerHTML = `₦${car.price} <span style="font-size: 0.5em; color: var(--text-muted); font-weight: 500; vertical-align: middle; margin-left: 0.5rem;">(Negotiable)</span>`;
     
     // Badges
     const qty = car.quantity !== undefined ? car.quantity : 1;
